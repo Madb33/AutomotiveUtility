@@ -1,6 +1,5 @@
 import binascii
-import hexdump
-
+import time, json
 MESSAGE_TYPE = [
     0x00, # 명령 또는 요청을 통해 응답을 기다림 (무시될 수 있음)
     0x01, # 실행 후 무시 요청 (A fire&forget request)
@@ -126,15 +125,20 @@ def GetVisualSOMEIP(data: bytearray):
     print("Message ID")
     print("\tService ID: 0x"+serviceID.hex())
     print("\tMethod ID: 0x"+MethodID.hex())
-    print("Length: "+str(int(Length.hex()))+" Bytes")
+    print("Length: "+str(int.from_bytes(Length, 'big'))+" Bytes")
     print("Request ID")
     print("\tClient ID: 0x"+clientID.hex())
     print("\tSession ID: 0x"+SessionID.hex())
     print("Protocol Version: "+str(hex(ProtocolVersion)))
-    print("Protocol Version: "+str(hex(InterfaceVersion)))
-    print("Protocol Version: "+str(hex(MessageType)))
-    print("Protocol Version: "+str(hex(ReturnCode)))
+    print("Interface Version: "+str(hex(InterfaceVersion)))
+    print("Message Type: "+str(hex(MessageType)))
+    print("Return Code: "+str(hex(ReturnCode)))
     print("PAYLOAD")
     hex_dump(payload)
     
-
+def SOMEIPLogger(Ip:str, Port:int, data: bytearray):
+    log = {"Time":str(time.time()), "IP":Ip, "PORT":Port, "PAYLOAD": data.hex()}
+    jsonStr = json.dumps(log)
+    jsonlog = open("someipLogger.log", "a")
+    jsonlog.write(jsonStr+"\n")
+    jsonlog.close()
