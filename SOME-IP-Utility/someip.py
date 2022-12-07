@@ -1,5 +1,6 @@
 import binascii
 import time, json
+import socket
 MESSAGE_TYPE = [
     0x00, # 명령 또는 요청을 통해 응답을 기다림 (무시될 수 있음)
     0x01, # 실행 후 무시 요청 (A fire&forget request)
